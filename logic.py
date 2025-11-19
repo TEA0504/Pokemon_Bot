@@ -49,7 +49,7 @@ class Pokemon:
                             stats["defense"] = stat["base_stat"]
                         elif name == "hp":
                             stats["hp"] = stat["base_stat"]
-
+        return stats
     
     async def attack(self, enemy):
         if isinstance(enemy, Pokemon):
