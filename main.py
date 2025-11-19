@@ -39,4 +39,27 @@ async def go(ctx):
     else:
         await ctx.send("Zaten kendi Pokémonunuzu oluşturdunuz!")
 
+@bot.command("pokebilgi")
+async def go(ctx):
+    author = ctx.author.name
+    if author in Pokemon.pokemons:
+        pokemon = Pokemon.pokemons[author]
+        await ctx.send(pokemon.info())
+    else:
+        await ctx.send("Pokemonun yok")
+
+@bot.command()
+async def attack(ctx):
+    target = ctx.message.mentions[0] if ctx.message.mentions else None
+    if target:
+        if target.name in Pokemon.pokemons and ctx.author.name in Pokemon.pokemons:
+            enemy = Pokemon.pokemons[target.name]
+            attacker = Pokemon.pokemons[ctx.author.name]
+            result = await attacker.attack(enemy)
+            await ctx.send(result)
+        else:
+            await ctx.send("Savaşmak için her iki katılımcının da Pokemon sahibi olması gerekir!")
+    else:
+        await ctx.send("Saldırmak istediğiniz kullanıcıyı etiketleyerek belirtin.")
+
 bot.run(TOKEN)

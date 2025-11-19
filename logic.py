@@ -49,6 +49,16 @@ class Pokemon:
                             stats["defense"] = stat["base_stat"]
                         elif name == "hp":
                             stats["hp"] = stat["base_stat"]
+
+    
+    async def attack(self, enemy):
+        if isinstance(enemy, Pokemon):
+            if enemy.hp > self.attackpts:
+                enemy.hp -= self.attackpts
+                return f"Pokémon eğitmeni @{self.pokemon_trainer} @{enemy.pokemon_trainer}'ne saldırdı\n@{enemy.pokemon_trainer}'nin sağlık durumu şimdi {enemy.hp}"
+            else:
+                enemy.hp = 0
+                return f"Pokémon eğitmeni @{self.pokemon_trainer} @{enemy.pokemon_trainer}'ni yendi!"
                 
     async def info(self):
         if not self.name:
