@@ -29,6 +29,6 @@ class Pokemon:
             async with session.get(url) as response:
                 if response.status == 200:
                     data = await response.json()
-                    return data['sprites'][4]['front_default']
+                    return data['sprites']['front_default']
                 else:
-                    return "Pikachu"
+                    return None
