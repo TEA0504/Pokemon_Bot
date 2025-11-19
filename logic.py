@@ -23,12 +23,41 @@ class Pokemon:
                 else:
                     return "Pikachu"
                 
-    async def get_name(self):
+    async def show_img(self):
         url = f'https://pokeapi.co/api/v2/pokemon/{self.pokemon_number}'
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
                 if response.status == 200:
                     data = await response.json()
-                    return data['sprites']['front_default']
+                    img_url = data["sprites"]["front_default"]
+                    return img_url
                 else:
                     return None
+                
+    async def fetch_stats(self):
+        stats = {"attack":0, "defense":0, "hp":0}
+        url = f'https://pokeapi.co/api/v2/pokemon/{self.pokemon_number}'
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    for stat in data["stats"]:
+                        name = stat["stat"]["name"]
+                        if name == "attack":
+                            stats["attack"] = stat["base_stat"]
+                        elif name == "defense":
+                            stats["defense"] = stat["base_stat"]
+                        elif name == "hp":
+                            stats["hp"] = stat["base_stat"]
+                
+    async def info(self):
+        if not self.name:
+            self.name = await self.get_name()
+        return f"pokemonunun ismi {self.name}\nSaldırı:{self.attack}\nSavunma:{self.defense}\nCan:{self.hp}"
+    
+    async def set_stats(self):
+        stats = await self.fetch_stats()
+        self.attackpts = stats["attack"]
+        self.hp = stats["hp"]
+        self.defense = stats["defense"]
+        print(stats)
