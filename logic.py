@@ -12,6 +12,7 @@ class Pokemon:
         self.attackpts = None
         self.defense = None
         self.hp = None
+        self.max_hp = None
 
     async def get_name(self):
         url = f'https://pokeapi.co/api/v2/pokemon/{self.pokemon_number}'
@@ -63,11 +64,21 @@ class Pokemon:
     async def info(self):
         if not self.name:
             self.name = await self.get_name()
-        return f"pokemonunun ismi {self.name}\nSaldırı:{self.attack}\nSavunma:{self.defense}\nCan:{self.hp}"
+        return f"pokemonunun ismi {self.name}\nSaldırı:{self.attackpts}\nSavunma:{self.defense}\nCan:{self.hp}"
     
     async def set_stats(self):
         stats = await self.fetch_stats()
         self.attackpts = stats["attack"]
         self.hp = stats["hp"]
         self.defense = stats["defense"]
+        self.hp = stats["hp"]
+        self.max_hp = stats["max_hp"]
         print(stats)
+
+    async def heal(self, amount):
+        if self.hp is None:
+            await self.set_stats()
+        self.hp += amount
+        if self.hp > self.max_hp:
+            self.hp = self.max_hp
+        return f"{self.name} {amount} can iyileşti! Şu anki can: {self.hp}/{self.max_hp}"
